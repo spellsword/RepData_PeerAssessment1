@@ -1,20 +1,58 @@
-# Reproducible Research: Peer Assessment 1
+---
+title: "Peer Assignment 1"
+author: "Chenxi Wang"
+date: "Sunday, August 17, 2014"
+output: html_document
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r, echo=TRUE}
+act <- read.csv("activity.csv")
+act$date<-as.Date(act$date)
+daymean<-rowsum(act$step,act$date, na.rm = TRUE)
+plot(date, daymean[,1], type = "l", main = 'Mean value of steps for each day', xlab = "date", ylab = "mean")
+
+r<-rowsum(act$step, act$date, na.rm = TRUE)
+mean<-mean(r)
+median(r)
+hist(r, col = "red", breaks = 35, xlab = "Day steps", main = "Histogram of the total number of steps taken each day" )
+
+act$step[is.na(act$step)] <- mean
+
+fivemin<- rowsum(act$step, act$interval, na.rm = TRUE)
+fivemin<-fivemin/length(int)
+int<-unique(act$interval)
+fivemean<- data.frame(fivemin[,1],int)
+names(fivemean)<- c("mean","interval")
+plot(int, fivemin,  xlab = "interval", ylab = "mean", type = "l")
+fivemean[which(fivemean[,1]>37),]
+
+weekend <- which(weekdays(act$date) == "Saturday" | weekdays(act$date) == "Sunday")
+
+weekday <- which(weekdays(act$date) == "Monday" | weekdays(act$date) == "Tuesday"| weekdays(act$date) == "Wednesday"| weekdays(act$date) == "Thursday"| weekdays(act$date) == "Friday")
+
+actweekend <- act[weekend,]
+actweekday <- act[weekday,]
+
+fminwe<- rowsum(actweekend$steps, actweekend$interval, na.rm = TRUE)
+fminwe <-fminwe/length(fminwe)
+fminwd<- rowsum(actweekday$steps, actweekday$interval, na.rm = TRUE)
+fminwd <-fminwd/length(fminwd)
+
+par(mfrow=c(2,1))
+plot(unique(act$interval), fminwe, type = "l", xlab = "interval", ylab = "Number of steps", col = "sky blue", main = "Weekends")
+plot(unique(act$interval), fminwd, type = "l", xlab = "interval", ylab = "Number of steps", col = "sky blue", main = "Weekdays")
 
 
-## Loading and preprocessing the data
+```
 
+You can also embed plots, for example:
 
+```{r, echo=TRUE}
+plot(cars)
+```
 
-## What is mean total number of steps taken per day?
-
-
-
-## What is the average daily activity pattern?
-
-
-
-## Imputing missing values
-
-
-
-## Are there differences in activity patterns between weekdays and weekends?
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
